@@ -1,9 +1,9 @@
-execute pathogen#infect()
+"execute pathogen#infect()
 set nocompatible              " be iMproved, required
 filetype off                  " required
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.config/nvim/bundle
-call vundle#begin()
+" call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
 
@@ -13,29 +13,26 @@ call vundle#begin()
 " nmap <silent> <c-j> :wincmd j<CR>
 " nmap <silent> <c-h> :wincmd h<CR>
 " nmap <silent> <c-l> :wincmd l<CR>code --wait
-Plugin 'VundleVim/Vundle.vim'
+" Plugin 'VundleVim/Vundle.vim'
 
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
 " plugin on GitHub repo
-Plugin 'tpope/vim-fugitive'
+" Plugin 'tpope/vim-fugitive'
 " plugin from http://vim-scripts.org/vim/scripts.html
 " Plugin 'L9'
 " Git plugin not hosted on GitHub
-Plugin 'git://git.wincent.com/command-t.git'
 " git repos on your local machine (i.e. when working on your own plugin)
 " Plugin 'file:///home/gmarik/path/to/plugin'
 " The sparkup vim script is in a subdirectory of this repo called vim.
 " Pass the path to set the runtimepath properly.
-Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 " Install L9 and avoid a Naming conflict if you've already installed a
 " different version somewhere else.
 " Plugin 'ascenator/L9', {'name': 'newL9'}
-
-Plugin 'leafgarland/typescript-vim'
+" Plugin 'leafgarland/typescript-vim'
 " All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
+" call vundle#end()            " required
+" filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
 "filetype plugin on
 "
@@ -49,8 +46,11 @@ filetype plugin indent on    " required
 " Put your non-Plugin stuff after this line
 
 call plug#begin('~/.config/nvim/plugged')
- Plug 'vim-airline/vim-airline'
- Plug 'vim-airline/vim-airline-themes'
+Plug 'tpope/vim-fugitive'
+Plug 'git://git.wincent.com/command-t.git'
+Plug 'rstacruz/sparkup', {'rtp': 'vim/'}
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'scrooloose/nerdtree'
 Plug 'luochen1990/rainbow'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -59,25 +59,26 @@ Plug 'sainnhe/gruvbox-material'
 Plug 'maxmellon/vim-jsx-pretty'
 Plug 'yuezk/vim-js'
 Plug 'HerringtonDarkholme/yats.vim'
-Plug 'morhetz/gruvbox'
+" Plug 'morhetz/gruvbox'
 " Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 " Plug 'junegunn/fzf.vim'
 Plug 'ayu-theme/ayu-vim'
 Plug 'ghifarit53/tokyonight-vim'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 Plug 'nvim-lua/plenary.nvim'
+Plug 'ellisonleao/gruvbox.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'leafgarland/typescript-vim'
+
 call plug#end()
 let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
 let g:rainbow_active = 1
 let g:coc_global_extensions = ['coc-tsserver', 'coc-prettier', 'coc-emmet', 'coc-highlight', 'coc-pairs']
 au BufRead,BufNewFile *.ts   setfiletype typescript
-
+set termguicolors
 "  for gruvbox material 
- if has('termguicolors')
-       set termguicolors
-     endif
      set background=dark
      let g:gruvbox_material_background = 'hard'
      let g:gruvbox_material_better_performance = 1
@@ -106,6 +107,10 @@ au BufRead,BufNewFile *.ts   setfiletype typescript
 " Load the colorscheme
 " let g:lightline = {'colorscheme': 'tokyonight'}
 " colorscheme tokyonight
+"
+" for gruvbox
+" set background=dark " or light if you want light mode
+" colorscheme gruvbox
 
 nnoremap <C-Left> :tabprevious<CR>
 nnoremap <C-Right> :tabnext<CR>
@@ -116,11 +121,12 @@ nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 let &t_SI = "\e[6 q"
 let &t_EI = "\e[2 q"
-:set shiftwidth=2
-:set autoindent
-:set backspace=indent,eol,start
-:set smartindent
-:set cursorline
+set relativenumber
+set autoindent
+set backspace=indent,eol,start
+set smartindent
+set noswapfile
+set cursorline
 " nnoremap <C-p> :GFiles<Cr>
 map <silent> <C-n> :NERDTreeToggle<CR>
 
@@ -290,12 +296,17 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-:set mouse=a
-:set so=999
-:set ignorecase
-:set smartcase
-:set incsearch
-:set number
+set mouse=a
+set so=999
+set ignorecase
+set tabstop=4 softtabstop=4
+set noerrorbells
+set shiftwidth=4
+set smartcase
+set incsearch
+set number
+set hidden
+set nohlsearch
 set clipboard=unnamed
 let g:prettier#autoformat = 1
 let g:prettier#autoformat_require_pragma = 0
@@ -305,10 +316,9 @@ nmap <silent> <c-j> :wincmd j<CR>
 nmap <silent> <c-h> :wincmd h<CR>
 nmap <silent> <c-l> :wincmd l<CR>
 command! -nargs=0 Prettier :CocCommand prettier.forceFormatDocument
-set cmdheight=1
+set cmdheight=2
 set laststatus=2
 nnoremap <C-p> <cmd>Telescope find_files<cr>
 nnoremap <C-f> <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
-:noh
