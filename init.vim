@@ -1,120 +1,131 @@
-"execute pathogen#infect()
 set nocompatible              " be iMproved, required
 filetype off                  " required
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.config/nvim/bundle
-" call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
-" " Use ctrl-[hjkl] to select the active split!
-" nmap <silent> <c-k> :wincmd k<CR>
-" nmap <silent> <c-j> :wincmd j<CR>
-" nmap <silent> <c-h> :wincmd h<CR>
-" nmap <silent> <c-l> :wincmd l<CR>code --wait
-" Plugin 'VundleVim/Vundle.vim'
-
-" The following are examples of different formats supported.
-" Keep Plugin commands between vundle#begin/end.
-" plugin on GitHub repo
-" Plugin 'tpope/vim-fugitive'
-" plugin from http://vim-scripts.org/vim/scripts.html
-" Plugin 'L9'
-" Git plugin not hosted on GitHub
-" git repos on your local machine (i.e. when working on your own plugin)
-" Plugin 'file:///home/gmarik/path/to/plugin'
-" The sparkup vim script is in a subdirectory of this repo called vim.
-" Pass the path to set the runtimepath properly.
-" Install L9 and avoid a Naming conflict if you've already installed a
-" different version somewhere else.
-" Plugin 'ascenator/L9', {'name': 'newL9'}
-" Plugin 'leafgarland/typescript-vim'
-" All of your Plugins must be added before the following line
-" call vundle#end()            " required
-" filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
 
 call plug#begin('~/.config/nvim/plugged')
 Plug 'tpope/vim-fugitive'
 Plug 'git://git.wincent.com/command-t.git'
 Plug 'rstacruz/sparkup', {'rtp': 'vim/'}
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'itchyny/lightline.vim'
 Plug 'scrooloose/nerdtree'
-Plug 'luochen1990/rainbow'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'sainnhe/gruvbox-material'
-" Plug 'prettier/vim-prettier', { 'do': 'yarn install --frozen-lockfile --production' }
 Plug 'maxmellon/vim-jsx-pretty'
 Plug 'yuezk/vim-js'
 Plug 'HerringtonDarkholme/yats.vim'
-" Plug 'morhetz/gruvbox'
-" Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-" Plug 'junegunn/fzf.vim'
 Plug 'ayu-theme/ayu-vim'
-Plug 'ghifarit53/tokyonight-vim'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 Plug 'nvim-lua/plenary.nvim'
-Plug 'ellisonleao/gruvbox.nvim'
+Plug 'pangloss/vim-javascript'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+Plug 'gruvbox-community/gruvbox'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'peitalin/vim-jsx-typescript'
+Plug 'shinchu/lightline-gruvbox.vim'
+Plug 'tpope/vim-surround'
 Plug 'leafgarland/typescript-vim'
-
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 call plug#end()
+
+lua<< EOF
+require'nvim-treesitter.configs'.setup {
+  -- A list of parser names, or "all"
+  ensure_installed = 'all',
+
+  -- Install parsers synchronously (only applied to `ensure_installed`)
+  sync_install = false,
+
+  -- Automatically install missing parsers when entering buffer
+  auto_install = true,
+
+  -- List of parsers to ignore installing (for "all")
+   ignore_install = { "phpdoc" },
+
+  highlight = {
+    -- `false` will disable the whole extension
+    enable = true,
+
+    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
+    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
+    -- the name of the parser)
+    -- list of language that will be disabled
+    -- disable = { "c", "rust" },
+
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+}
+
+EOF
+let mapleader=' '
+" Console log from insert mode; Puts focus inside parentheses
+imap cll console.log(<Esc>==f(a
+" Console log from visual mode on next line, puts visual selection inside parentheses
+vmap cll yocll<Esc>p
+set splitbelow
+" exitinging vim shortcuts
+nmap <Leader>q :q<CR>
+nmap <Leader>qa :qa<CR>
+nmap <Leader>wq :wq<CR>
+nmap <Leader>w :w<CR>
+nmap <Leader>x :x<CR>
+nmap <Leader>a :q!<CR>
+nmap <Leader>n :vs ene<CR>
+tnoremap <Esc> <C-\><C-n>
+
 let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
-let g:rainbow_active = 1
-let g:coc_global_extensions = ['coc-tsserver', 'coc-prettier', 'coc-emmet', 'coc-highlight', 'coc-pairs']
+let g:coc_global_extensions = ['coc-tsserver', 'coc-prettier', 'coc-pairs', 'coc-emmet', 'coc-highlight', 'coc-yank']
 au BufRead,BufNewFile *.ts   setfiletype typescript
-set termguicolors
-"  for gruvbox material 
-     set background=dark
-     let g:gruvbox_material_background = 'hard'
-     let g:gruvbox_material_better_performance = 1
-     let g:gruvbox_material_enable_italic = 1
-     let g:gruvbox_material_cursor = 'orange'
-     let g:grubbox_material_enable_bold = 1
-     let g:airline_theme = 'gruvbox_material'
-     colorscheme gruvbox-material
+ if has('termguicolors')
+          set termguicolors
+        endif  
+"for gruvbox material 
+"	let g:gruvbox_material_transparent_background=1
+"	set background=dark
+"     let g:gruvbox_material_background = 'hard'
+"     let g:gruvbox_material_better_performance = 1
+"     let g:grubbox_material_enable_bold = 1
+"	 let g:lightline = {'colorscheme' : 'gruvbox_material'}
+"     colorscheme gruvbox-material
 "
-"for ayu theme
-"set termguicolors 
-"let ayucolor="dark"   " for dark version of theme
-"colorscheme ayu
+" for catppucin
+" let g:catppuccin_flavour = "mocha" " latte, frappe, macchiato, mocha
+" let g:lightline = {'colorscheme': 'catppuccin'}
+" lua << EOF
+" require("catppuccin").setup()
+" EOF
+" colorscheme catppuccin
 
-" let g:tokyonight_style = "night"
-" set termguicolors
-" let g:tokyonight_italic_functions = 1
-" let g:tokyonight_sidebars = [ "qf", "vista_kind", "terminal", "packer" ]
-" 
-"  Change the "hint" color to the "orange" color, and make the "error" color bright red
-" let g:tokyonight_colors = {
-"   \ 'hint': 'orange',
-"   \ 'error': '#ff0000'
-" \ }
-
-" Load the colorscheme
-" let g:lightline = {'colorscheme': 'tokyonight'}
-" colorscheme tokyonight
-"
 " for gruvbox
-" set background=dark " or light if you want light mode
-" colorscheme gruvbox
+	  set background=dark
+	   let g:gruvbox_contrast_dark = 'hard'
+	   let g:lightline = {'colorscheme': 'gruvbox'}
+	   "transparency
+"	   autocmd VimEnter * hi Normal ctermbg=NONE guibg=NONE
+	   colorscheme gruvbox
+
+"for tokyonight
+"  let g:tokyonight_style='night'
+"  let g:lightline = {'colorscheme': 'tokyonight'}
+"  colorscheme tokyonight
+"
+" xcode
+" augroup vim-colors-xcode
+"     autocmd!
+" augroup END
+" 
+" autocmd vim-colors-xcode ColorScheme * hi Comment        cterm=italic gui=italic
+" autocmd vim-colors-xcode ColorScheme * hi SpecialComment cterm=italic gui=italic
+" colorscheme xcodedark
+
 
 nnoremap <C-Left> :tabprevious<CR>
 nnoremap <C-Right> :tabnext<CR>
-nmap <C-Space> <Plug>(coc-codeaction)
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
@@ -129,6 +140,7 @@ set noswapfile
 set cursorline
 " nnoremap <C-p> :GFiles<Cr>
 map <silent> <C-n> :NERDTreeToggle<CR>
+let g:NERDTreeMapOpenVSplit = 'v'
 
 " Set internal encoding of vim, not needed on neovim, since coc.nvim using some
 " unicode characters in the file autoload/float.vim
@@ -302,6 +314,9 @@ set ignorecase
 set tabstop=4 softtabstop=4
 set noerrorbells
 set shiftwidth=4
+set nowrap
+set colorcolumn=80
+set signcolumn=yes
 set smartcase
 set incsearch
 set number
@@ -315,10 +330,15 @@ nmap <silent> <c-k> :wincmd k<CR>
 nmap <silent> <c-j> :wincmd j<CR>
 nmap <silent> <c-h> :wincmd h<CR>
 nmap <silent> <c-l> :wincmd l<CR>
+nmap <silent> <leader>j :wincmd s \| :term<CR> 
 command! -nargs=0 Prettier :CocCommand prettier.forceFormatDocument
 set cmdheight=2
 set laststatus=2
-nnoremap <C-p> <cmd>Telescope find_files<cr>
-nnoremap <C-f> <cmd>Telescope live_grep<cr>
+nnoremap <leader>o <cmd>Telescope find_files<cr>
+nnoremap <leader>f <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+vmap <C-c> "+yi
+vmap <C-x> "+c
+vmap <C-v> c<ESC>"+p
+imap <C-v> <ESC>"+pa
