@@ -6,18 +6,22 @@ set rtp+=~/.config/nvim/bundle
 call plug#begin('~/.config/nvim/plugged')
 Plug 'tpope/vim-fugitive'
 Plug 'git://git.wincent.com/command-t.git'
+Plug 'rebelot/kanagawa.nvim'
+Plug 'nvim-lualine/lualine.nvim'
 Plug 'rstacruz/sparkup', {'rtp': 'vim/'}
-Plug 'itchyny/lightline.vim'
+Plug 'navarasu/onedark.nvim'
 Plug 'scrooloose/nerdtree'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'sainnhe/gruvbox-material'
 Plug 'maxmellon/vim-jsx-pretty'
+Plug 'sainnhe/edge'
 Plug 'yuezk/vim-js'
 Plug 'HerringtonDarkholme/yats.vim'
 Plug 'ayu-theme/ayu-vim'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 Plug 'nvim-lua/plenary.nvim'
 Plug 'pangloss/vim-javascript'
+Plug 'kyazdani42/nvim-web-devicons'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 Plug 'gruvbox-community/gruvbox'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -25,6 +29,8 @@ Plug 'peitalin/vim-jsx-typescript'
 Plug 'shinchu/lightline-gruvbox.vim'
 Plug 'tpope/vim-surround'
 Plug 'leafgarland/typescript-vim'
+Plug 'sainnhe/sonokai'
+Plug 'nvim-treesitter/nvim-treesitter-context'
 call plug#end()
 
 lua<< EOF
@@ -44,7 +50,6 @@ require'nvim-treesitter.configs'.setup {
   highlight = {
     -- `false` will disable the whole extension
     enable = true,
-
     -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
     -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
     -- the name of the parser)
@@ -60,32 +65,81 @@ require'nvim-treesitter.configs'.setup {
 }
 
 EOF
+
+lua<< EOF
+require'treesitter-context'.setup({
+        enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
+        throttle = true, -- Throttles plugin updates (may improve performance)
+        max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
+        show_all_context = show_all_context,
+        patterns = { -- Match patterns for TS nodes. These get wrapped to match at word boundaries.
+            -- For all filetypes
+            -- Note that setting an entry here replaces all other patterns for this entry.
+            -- By setting the 'default' entry below, you can control which nodes you want to
+            -- appear in the context window.
+            default = {
+                "function",
+                "method",
+                "for",
+                "while",
+                "if",
+                "switch",
+                "case",
+            },
+
+            rust = {
+                "loop_expression",
+                "impl_item",
+            },
+
+            typescript = {
+                "class_declaration",
+                "abstract_class_declaration",
+                "else_clause",
+            },
+        },
+    })
+EOF
+let g:CommandTPreferredImplementation='lua'
 let mapleader=' '
+set guicursor=
+let NERDTreeShowHidden=1
 " Console log from insert mode; Puts focus inside parentheses
 imap cll console.log(<Esc>==f(a
 " Console log from visual mode on next line, puts visual selection inside parentheses
 vmap cll yocll<Esc>p
+set sidescrolloff=7
+set sidescroll=1
 set splitbelow
+set guicursor+=a:-blinkwait175-blinkoff150-blinkon175
+
 " exitinging vim shortcuts
-nmap <Leader>q :q<CR>
-nmap <Leader>qa :qa<CR>
-nmap <Leader>wq :wq<CR>
+"nmap <Leader>q :q<CR>
+"nmap <Leader>qa :qa<CR>
+"nmap <Leader>wq :wq<CR>
 nmap <Leader>wa :wa<CR>
 nmap <Leader>w :w<CR>
-nmap <Leader>x :x<CR>
-nmap <Leader>a :q!<CR>
-nmap <Leader>n :vs ene<CR>
+"nmap <Leader>x :x<CR>
+"nmap <Leader>n :vs ene<CR>
 tnoremap <Esc> <C-\><C-n>
+
+" In insert or command mode, move normally by using Ctrl
+inoremap <C-h> <Left>
+inoremap <C-j> <Down>
+inoremap <C-k> <Up>
+inoremap <C-l> <Right>
+cnoremap <C-h> <Left>
+cnoremap <C-j> <Down>
+cnoremap <C-k> <Up>
+cnoremap <C-l> <Right>
 
 let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
 let g:coc_global_extensions = ['coc-tsserver', 'coc-prettier', 'coc-pairs', 'coc-emmet', 'coc-highlight', 'coc-yank']
 au BufRead,BufNewFile *.ts   setfiletype typescript
- if has('termguicolors')
-          set termguicolors
-        endif  
-"transparency
-autocmd VimEnter * hi NormalNC ctermbg=NONE guibg=NONE
+if has('termguicolors')
+  set termguicolors
+endif
 "for gruvbox material 
 "	let g:gruvbox_material_transparent_background=1
 "	set background=dark
@@ -94,30 +148,173 @@ autocmd VimEnter * hi NormalNC ctermbg=NONE guibg=NONE
 "     let g:grubbox_material_enable_bold = 1
 "	 let g:lightline = {'colorscheme' : 'gruvbox_material'}
 "     colorscheme gruvbox-material
+
+
+"for onedark
+"lua << EOF
+"require('onedark').setup  {
+"    -- Main options --
+"    style = 'darker', -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
+"    transparent = true,  -- Show/hide background
+"    term_colors = true, -- Change terminal color as per the selected theme style
+"    ending_tildes = false, -- Show the end-of-buffer tildes. By default they are hidden
+"    cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
 "
-" for catppucin
-" let g:catppuccin_flavour = "mocha" " latte, frappe, macchiato, mocha
-" let g:lightline = {'colorscheme': 'catppuccin'}
-" lua << EOF
-" require("catppuccin").setup()
-" EOF
-" colorscheme catppuccin
+"    -- toggle theme style ---
+"    toggle_style_key = nil, -- keybind to toggle theme style. Leave it nil to disable it, or set it to a string, for example "<leader>ts"
+"    toggle_style_list = {'dark', 'darker', 'cool', 'deep', 'warm', 'warmer', 'light'}, -- List of styles to toggle between
+"
+"    -- Change code style ---
+"    -- Options are italic, bold, underline, none
+"    -- You can configure multiple style with comma seperated, For e.g., keywords = 'italic,bold'
+"    code_style = {
+"        comments = 'italic',
+"        keywords = 'none',
+"        functions = 'none',
+"        strings = 'none',
+"        variables = 'none'
+"    },
+"
+"    -- Custom Highlights --
+"    colors = {
+"		bg_blue = "#196fb5"
+"		   }, -- Override default colors
+"    highlights = {}, -- Override highlight groups
+"
+"    -- Plugins Config --
+"    diagnostics = {
+"        darker = true, -- darker colors for diagnostic
+"        undercurl = true,   -- use undercurl instead of underline for diagnostics
+"        background = true,    -- use background color for virtual text
+"    },
+"}
+"EOF
+"colorscheme onedark
 
 " for gruvbox
 "	  set background=dark
 "	   let g:gruvbox_contrast_dark = 'hard'
-"	   let g:lightline = {'colorscheme': 'gruvbox'}
-"	   "transparency
+"	   let g:gruvbox_invert_selection=0
 "	   colorscheme gruvbox
-
-"for tokyonight
-  let g:tokyonight_style='night'
-  let g:lightline = {'colorscheme': 'tokyonight'}
-  let g:tokyonight_transparent=1
-  let g:tokyonight_transparent_sidebar=1
-  colorscheme tokyonight
 "
+" for kanagawa
+"lua << EOF
+"require('kanagawa').setup({
+"    undercurl = true,           -- enable undercurls
+"    commentStyle = { italic = true },
+"    functionStyle = {},
+"    keywordStyle = { italic = true},
+"    statementStyle = { bold = true },
+"    typeStyle = {},
+"    variablebuiltinStyle = { italic = true},
+"    specialReturn = true,       -- special highlight for the return keyword
+"    specialException = true,    -- special highlight for exception handling keywords
+"    transparent = true,        -- do not set background color
+"    dimInactive = false,        -- dim inactive window `:h hl-NormalNC`
+"    globalStatus = false,       -- adjust window separators highlight for laststatus=3
+"    terminalColors = true,      -- define vim.g.terminal_color_{0,17}
+"    colors = {},
+"    overrides = {},
+"    theme = "default"           -- Load "default" theme or the experimental "light" theme
+"})
+"EOF
+"colorscheme kanagawa
+"
+"for tokyonight
+lua << EOF
+require("tokyonight").setup({
+  -- your configuration comes here
+  -- or leave it empty to use the default settings
+  style = "night", -- The theme comes in three styles, `storm`, a darker variant `night` and `day`
+  transparent = true, -- Enable this to disable setting the background color
+  terminal_colors = true, -- Configure the colors used when opening a `:terminal` in Neovim
+  styles = {
+    -- Style to be applied to different syntax groups
+    -- Value is any valid attr-list value for `:help nvim_set_hl`
+    comments = { italic = true },
+    keywords = { italic = true },
+    functions = {},
+    variables = {},
+    -- Background styles. Can be "dark", "transparent" or "normal"
+    sidebars = "dark", -- style for sidebars, see below
+    floats = "dark", -- style for floating windows
+  },
+  sidebars = { "qf", "help" }, -- Set a darker background on sidebar-like windows. For example: `["qf", "vista_kind", "terminal", "packer"]`
+  day_brightness = 0.3, -- Adjusts the brightness of the colors of the **Day** style. Number between 0 and 1, from dull to vibrant colors
+  hide_inactive_statusline = false, -- Enabling this option, will hide inactive statuslines and replace them with a thin border instead. Should work with the standard **StatusLine** and **LuaLine**.
+  dim_inactive = false, -- dims inactive windows
+  lualine_bold = false, -- When `true`, section headers in the lualine theme will be bold
 
+  --- You can override specific color groups to use other groups or a hex color
+  --- function will be called with a ColorScheme table
+  ---@param colors ColorScheme
+  on_colors = function(colors) end,
+
+  --- You can override specific highlights to use other groups or a hex color
+  --- function will be called with a Highlights and ColorScheme table
+  ---@param highlights Highlights
+  ---@param colors ColorScheme
+  on_highlights = function(highlights, colors) end,
+})
+EOF
+  set background=dark
+  let g:tokyonight_transparent_sidebar=1
+  colorscheme tokyonight-night
+
+"sonokai
+" let g:sonokai_style = 'default'
+"        let g:sonokai_better_performance = 1
+"		let g:sonokai_transparent_background=2
+"		let g:sonokai_enable_italic=1
+"        colorscheme sonokai
+" let g:lightline = {'colorscheme' : 'sonokai'}
+
+"transparency
+hi! Normal ctermbg=NONE guibg=NONE
+hi! NonText ctermbg=NONE guibg=NONE
+
+ lua << END
+require('lualine').setup {
+  options = {
+    icons_enabled = false,
+    theme = 'auto',
+    component_separators = { left = '', right = ''},
+    section_separators = { left = '', right = ''},
+    disabled_filetypes = {
+      statusline = {},
+      winbar = {},
+    },
+    ignore_focus = {},
+    always_divide_middle = true,
+    globalstatus = false,
+    refresh = {
+      statusline = 1000,
+      tabline = 1000,
+      winbar = 1000,
+    }
+  },
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_c = {'filename'},
+    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
+    lualine_y = {},
+    lualine_z = {}
+  },
+  tabline = {},
+  winbar = {},
+  inactive_winbar = {},
+  extensions = {}
+}
+END
 
 nnoremap <C-Left> :tabprevious<CR>
 nnoremap <C-Right> :tabnext<CR>
@@ -274,6 +471,10 @@ command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.org
 " Add (Neo)Vim's native statusline support.
 " NOTE: Please see `:h coc-status` for integrations with external plugins that
 " provide custom statusline: lightline.vim, vim-airline.
+function! CocCurrentFunction()
+    return get(b:, 'coc_current_function', '')
+endfunction
+
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Mappings for CoCList
@@ -316,7 +517,7 @@ nmap <silent> <c-k> :wincmd k<CR>
 nmap <silent> <c-j> :wincmd j<CR>
 nmap <silent> <c-h> :wincmd h<CR>
 nmap <silent> <c-l> :wincmd l<CR>
-nmap <silent> <leader>j :wincmd s \| :term<CR> 
+"  nmap <silent> <leader>j :wincmd s \| :term<CR> 
 command! -nargs=0 Prettier :CocCommand prettier.forceFormatDocument
 set cmdheight=2
 set laststatus=2
